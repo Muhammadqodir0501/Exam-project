@@ -45,7 +45,11 @@ public class CommentService {
         List<Comment> comments = new ArrayList<>();
         try (Connection connection = DbConfig.getDataSource().getConnection()) {
             connection.setAutoCommit(true);
-            String sql = "SELECT * FROM comments WHERE publication_id = ? ORDER BY created_at DESC";
+            String sql = "SELECT c.*, u.first_name, u.last_name " +
+                    "FROM comments c " +
+                    "JOIN users u ON c.user_id = u.id " +
+                    "WHERE c.publication_id = ? " +
+                    "ORDER BY c.created_at DESC";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, publicationId);
             System.out.println("Executing SQL: " + sql + " with publication_id: " + publicationId);
@@ -58,6 +62,7 @@ public class CommentService {
                 comment.setPublicationId(rs.getInt("publication_id"));
                 comment.setContent(rs.getString("content"));
                 comment.setCreatedAt(rs.getTimestamp("created_at"));
+                comment.setUserName(rs.getString("first_name") + " " + rs.getString("last_name"));
                 comments.add(comment);
             }
             System.out.println("Found " + comments.size() + " comments for publication ID: " + publicationId);

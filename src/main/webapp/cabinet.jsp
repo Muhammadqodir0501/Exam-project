@@ -20,7 +20,7 @@
 
 <div class="row bg-dark text-white p-2">
     <div class="col-2 offset-10 d-flex align-items-center">
-        <img src="/publication/<%=currentUser.getPhotoId()%>" alt="User Photo" class="rounded-circle me-2" width="40" height="40">
+        <img src="/publication/<%=currentUser.getPhotoId()%>" alt="User Photo" class="rounded-circle me-2" width="40" height="40" onerror="this.src='https://via.placeholder.com/40'; console.log('User photo failed to load for ID: <%=currentUser.getPhotoId()%>')">
         <span><%=currentUser.getFullName()%></span>
     </div>
 </div>
@@ -41,7 +41,7 @@
         %>
         <div class="col-md-4 mb-3">
             <div class="card">
-                <img src="/publication/<%= publication.getPublicationPhotoId() %>" class="card-img-top" alt="Publication Photo">
+                <img src="/publication/<%= publication.getPublicationPhotoId() %>" class="card-img-top" alt="Publication Photo" onerror="this.src='https://via.placeholder.com/150'; console.log('Publication photo failed to load for ID: <%=publication.getPublicationPhotoId()%>')">
                 <div class="card-body">
                     <h5 class="card-title"><%= publication.getTitle() %></h5>
                     <p class="card-text"><%= publication.getDescription() %></p>
@@ -56,7 +56,7 @@
                                     for (Comment comment : comments) {
                             %>
                             <div class="mb-2">
-                                <p><strong>User <%= comment.getUserId() %>:</strong> <%= comment.getContent() %></p>
+                                <p><strong><%= comment.getUserName() %>:</strong> <%= comment.getContent() %></p>
                                 <small class="text-muted"><%= comment.getCreatedAt() %></small>
                             </div>
                             <%

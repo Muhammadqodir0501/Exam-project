@@ -15,4 +15,5 @@ public class Comment {
     private Integer publicationId;
     private String content;
     private Date createdAt;
+    private String userName;
 }

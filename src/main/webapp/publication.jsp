@@ -21,7 +21,7 @@
                     <div class="mb-3">
                         <label>
                             <img class="rounded-circle" width="80" src="https://via.placeholder.com/80" alt="Publication Photo" id="previewImage">
-                            <input name="photo" type="file" class="d-none" id="photoInput" required>
+                            <input name="photo" type="file" class="d-none" id="photoInput" accept="image/*" required>
                         </label>
                     </div>
                     <div class="mb-3">
@@ -33,7 +33,7 @@
                         <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Publish</button>
-                    <a href="/cabinet.jsp" class="btn btn-secondary w-100 mt-2">Cancel</a>
+                    <a href="/cabinet" class="btn btn-secondary w-100 mt-2">Cancel</a>
                 </form>
             </div>
         </div>
@@ -67,10 +67,12 @@
 </div>
 
 <script>
+    // Ensure the click on the image triggers the file input
     document.getElementById('previewImage').addEventListener('click', function() {
         document.getElementById('photoInput').click();
     });
 
+    // Update the preview image when a file is selected
     document.getElementById('photoInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -78,7 +80,14 @@
             reader.onload = function(e) {
                 document.getElementById('previewImage').src = e.target.result;
             };
+            reader.onerror = function(e) {
+                console.error('Error reading file:', e);
+                document.getElementById('previewImage').src = 'https://via.placeholder.com/80';
+            };
             reader.readAsDataURL(file);
+        } else {
+            console.log('No file selected');
+            document.getElementById('previewImage').src = 'https://via.placeholder.com/80';
         }
     });
 </script>

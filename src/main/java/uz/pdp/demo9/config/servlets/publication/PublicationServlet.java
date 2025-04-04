@@ -1,9 +1,11 @@
 package uz.pdp.demo9.config.servlets.publication;
 
 import uz.pdp.demo9.config.entity.Attachment;
+import uz.pdp.demo9.config.entity.Comment;
 import uz.pdp.demo9.config.entity.Publication;
 import uz.pdp.demo9.config.entity.User;
 import uz.pdp.demo9.config.services.AttachmentService;
+import uz.pdp.demo9.config.services.CommentService;
 import uz.pdp.demo9.config.services.PublicationService;
 import uz.pdp.demo9.config.services.UserService;
 
@@ -76,28 +78,35 @@ public class PublicationServlet extends HttpServlet {
             String url = req.getRequestURI();
             if (url.equals(req.getContextPath() + "/publication")) {
                 List<Publication> publications = PublicationService.findAll();
+                for (Publication publication : publications) {
+                    List<Comment> comments = CommentService.findByPublicationId(publication.getId());
+                    publication.setComments(comments);
+                }
                 req.setAttribute("publications", publications);
                 req.getRequestDispatcher("/publication.jsp").forward(req, resp);
                 return;
             }
 
             Integer fileId = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1));
-            Publication publication = PublicationService.findById(fileId).orElseThrow(() -> new ServletException("Publication not found"));
-            Attachment attachment = AttachmentService.findById(publication.getPublicationPhotoId());
+            System.out.println("Fetching image for attachment ID: " + fileId);
+
+            // Directly fetch the attachment using the fileId (which is an attachment ID)
+            Attachment attachment = AttachmentService.findById(fileId);
             if (attachment != null) {
                 resp.setContentType("image/jpeg");
                 resp.getOutputStream().write(attachment.getContent());
             } else {
+                System.out.println("Attachment not found for ID: " + fileId);
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        } catch (ServletException e) {
-            System.err.println("Servlet Error: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid ID format: " + e.getMessage());
             e.printStackTrace();
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
