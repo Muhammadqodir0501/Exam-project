@@ -27,4 +27,23 @@ public class AttachmentService {
 
 
     }
+    @SneakyThrows
+    public static Attachment findById(Integer id) {
+        try (
+                Connection connection = DbConfig.getDataSource().getConnection();
+                ){
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from attachment where id = ?");
+            preparedStatement.setInt(1, id);
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()) {
+                Attachment attachment = new Attachment();
+                attachment.setId(id);
+                attachment.setContent(resultSet.getBytes(2));
+                return attachment;
+            }
+            return null;
+
+        }
+    }
 }

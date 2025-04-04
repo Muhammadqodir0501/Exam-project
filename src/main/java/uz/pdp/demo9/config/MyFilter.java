@@ -31,6 +31,7 @@ public class MyFilter implements Filter {
 
         Object user = request.getSession().getAttribute("currentUser");
         if (user == null) {
+            response.sendRedirect("/auth/login.jsp");
             return;
         }
 

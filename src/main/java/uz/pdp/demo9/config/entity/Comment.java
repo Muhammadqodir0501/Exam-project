@@ -4,10 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import java.util.Date;
+
 @AllArgsConstructor
+@Data
 @NoArgsConstructor
-public class Attachment {
+public class Comment {
     private Integer id;
-    private byte[] content;
+    private Integer userId;
+    private Integer publicationId;
+    private String content;
+    private Date createdAt;
 }

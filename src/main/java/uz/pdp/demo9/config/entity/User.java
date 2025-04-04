@@ -34,5 +34,9 @@ public class User {
         this.lastName = resultSet.getString("last_name");
         this.photoId = resultSet.getInt("photo_id");
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
 

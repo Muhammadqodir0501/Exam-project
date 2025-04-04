@@ -12,11 +12,14 @@
         <div class="col-md-6">
             <div class="card shadow-lg p-4">
                 <h2 class="text-center mb-4">Register</h2>
-                <form enctype="multipart/form-data" action="register" method="post" onsubmit="return handleSubmit(event)">
+                <% if (request.getParameter("error") != null) { %>
+                <div class="alert alert-danger"><%= request.getParameter("error") %></div>
+                <% } %>
+                <form enctype="multipart/form-data" action="/register" method="post">
                     <div class="mb-3">
                         <label>
-                            <img width="80" src="exam_project_image.jpg" alt="topilmadi">
-                            <input name="photo" type="file" class="d-none">
+                            <img class="rounded-circle" width="80" src="exam_project_image.jpg" alt="topilmadi" id="previewImage">
+                            <input name="photo" type="file" class="d-none" id="photoInput">
                         </label>
                     </div>
                     <div class="mb-3">
@@ -34,9 +37,10 @@
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
-                    </div> <div class="mb-3">
-                        <label for="password" class="form-label">Password Repeat</label>
-                        <input type="password" class="form-control" id="password_repeat" name="passwordRepeat" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordRepeat" class="form-label">Password Repeat</label>
+                        <input type="password" class="form-control" id="passwordRepeat" name="passwordRepeat" required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Register</button>
                 </form>
@@ -60,36 +64,6 @@
             reader.readAsDataURL(file);
         }
     });
-    function handleSubmit(event) {
-        event.preventDefault();
-        const form = document.querySelector('form');
-        const formData = new FormData(form);
-        
-        fetch('register', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = 'login.jsp';
-            } else {
-                alert('Registration failed. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Registration failed. Please try again.');
-        });
-        return false;
-    }
-    function handleSubmit(event) {
-        event.preventDefault();
-        const form = document.querySelector('form');
-        const formData = new FormData(form);
-                window.location.href = 'login.jsp';
-    }
 </script>
-
 </body>
 </html>
-
