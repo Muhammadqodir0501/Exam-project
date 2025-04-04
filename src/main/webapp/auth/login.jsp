@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,9 @@
     <div class="col-md-6">
       <div class="card shadow-lg p-4">
         <h2 class="text-center mb-4">Login</h2>
+        <% if (request.getParameter("error") != null) { %>
+        <div class="alert alert-danger"><%= request.getParameter("error") %></div>
+        <% } %>
         <form action="/login" method="post">
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
@@ -23,6 +27,9 @@
           </div>
           <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
+        <p class="text-center mt-3">
+          Don't have an account? <a href="/auth/register.jsp">Register here</a>
+        </p>
       </div>
     </div>
   </div>

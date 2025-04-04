@@ -15,67 +15,43 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@MultipartConfig
 @WebServlet("/register")
+@MultipartConfig
 public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            System.out.println("RegisterServlet: Starting registration");
-
+            String firstName = req.getParameter("firstName");
+            String lastName = req.getParameter("lastName");
+            String email = req.getParameter("email");
             String password = req.getParameter("password");
-            String passwordRepeat = req.getParameter("passwordRepeat");
-            System.out.println("Password: " + password + ", Password Repeat: " + passwordRepeat);
-
-            if (!password.equals(passwordRepeat)) {
-                System.out.println("Passwords do not match");
-                resp.sendRedirect("/auth/register.jsp?error=password_mismatch");
-                return;
-            }
-            if (password == null || password.length() <= 4) {
-                System.out.println("Password too short or null");
-                resp.sendRedirect("/auth/register.jsp?error=password_too_short");
-                return;
-            }
 
             Part part = req.getPart("photo");
-            System.out.println("Photo part: " + (part != null ? "Received" : "Missing"));
             if (part == null) {
-                System.out.println("No photo uploaded");
                 resp.sendRedirect("/auth/register.jsp?error=photo_missing");
                 return;
             }
             byte[] content = part.getInputStream().readAllBytes();
-            System.out.println("Attachment content length: " + content.length);
-            if (content.length == 0) {
-                System.out.println("Photo content is empty");
-            }
 
             Attachment attachment = new Attachment();
             attachment.setContent(content);
             Attachment savedAttachment = AttachmentService.save(attachment);
-            System.out.println("Saved Attachment ID: " + savedAttachment.getId());
 
-            User user = new User(req);
-            System.out.println("User created: " + user);
-            if (user.getEmail() == null) {
-                System.out.println("Email is null");
-                resp.sendRedirect("/auth/register.jsp?error=email_missing");
-                return;
-            }
+            User user = new User();
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEmail(email);
+            user.setPassword(password);
             user.setPhotoId(savedAttachment.getId());
-            System.out.println("User to save: " + user);
 
-            User savedUser = UserService.save(user);
-            System.out.println("Saved User ID: " + savedUser.getId());
-
+            UserService.save(user);
             resp.sendRedirect("/auth/login.jsp");
         } catch (SQLException e) {
-            System.err.println("SQL Error during registration: " + e.getMessage());
+            System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
             resp.sendRedirect("/auth/register.jsp?error=sql_error");
         } catch (ServletException | IOException e) {
-            System.err.println("Servlet/IO Error during registration: " + e.getMessage());
+            System.err.println("Servlet/IO Error: " + e.getMessage());
             e.printStackTrace();
             resp.sendRedirect("/auth/register.jsp?error=registration_failed");
         }

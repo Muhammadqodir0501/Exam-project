@@ -1,5 +1,7 @@
 package uz.pdp.demo9.config;
 
+import uz.pdp.demo9.config.entity.User;
+
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebServlet;
@@ -22,21 +24,33 @@ public class MyFilter implements Filter {
             "/publication.jsp"));
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        String url = request.getRequestURI();
-        if (openPages.contains(url)) {
-            filterChain.doFilter(request, response);
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse resp = (HttpServletResponse) response;
+
+        String uri = req.getRequestURI();
+        System.out.println("MyFilter: Processing URI: " + uri);
+
+        // Allow image requests to bypass authentication check
+        if (uri.startsWith(req.getContextPath() + "/publication/") && uri.matches(".*/\\d+$")) {
+            System.out.println("MyFilter: Allowing image request: " + uri);
+            chain.doFilter(request, response);
             return;
         }
 
-        Object user = request.getSession().getAttribute("currentUser");
-        if (user == null) {
-            response.sendRedirect("/auth/login.jsp");
+        if (openPages.contains(uri)) {
+            System.out.println("MyFilter: Allowing access to open page: " + uri);
+            chain.doFilter(request, response);
             return;
         }
 
-        filterChain.doFilter(servletRequest, servletResponse);
+        User currentUser = (User) req.getSession().getAttribute("currentUser");
+        if (currentUser == null) {
+            System.out.println("MyFilter: User not logged in, redirecting to login");
+            resp.sendRedirect("/auth/login.jsp");
+        } else {
+            System.out.println("MyFilter: User logged in, proceeding");
+            chain.doFilter(request, response);
+        }
     }
 }

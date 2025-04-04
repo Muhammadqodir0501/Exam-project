@@ -42,7 +42,7 @@ public class PublicationServlet extends HttpServlet {
             System.out.println("Photo part: " + (part != null ? "Received" : "Missing"));
             if (part == null) {
                 System.out.println("No photo uploaded");
-                resp.sendRedirect("/cabinet.jsp?error=photo_missing");
+                resp.sendRedirect("/cabinet?error=photo_missing");
                 return;
             }
             byte[] content = part.getInputStream().readAllBytes();
@@ -60,15 +60,16 @@ public class PublicationServlet extends HttpServlet {
             publication.setDescription(req.getParameter("description"));
             PublicationService.save(publication, currentUser.getId());
 
-            resp.sendRedirect("/cabinet.jsp");
+            System.out.println("Publication saved, redirecting to /cabinet");
+            resp.sendRedirect("/cabinet");
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
-            resp.sendRedirect("/cabinet.jsp?error=sql_error");
+            resp.sendRedirect("/cabinet?error=sql_error");
         } catch (ServletException | IOException e) {
             System.err.println("Servlet/IO Error: " + e.getMessage());
             e.printStackTrace();
-            resp.sendRedirect("/cabinet.jsp?error=publication_failed");
+            resp.sendRedirect("/cabinet?error=publication_failed");
         }
     }
 
@@ -88,15 +89,14 @@ public class PublicationServlet extends HttpServlet {
             }
 
             Integer fileId = Integer.parseInt(url.substring(url.lastIndexOf("/") + 1));
-            System.out.println("Fetching image for attachment ID: " + fileId);
+            System.out.println("PublicationServlet: Fetching image for attachment ID: " + fileId);
 
-            // Directly fetch the attachment using the fileId (which is an attachment ID)
             Attachment attachment = AttachmentService.findById(fileId);
             if (attachment != null) {
                 resp.setContentType("image/jpeg");
                 resp.getOutputStream().write(attachment.getContent());
             } else {
-                System.out.println("Attachment not found for ID: " + fileId);
+                System.out.println("PublicationServlet: Attachment not found for ID: " + fileId);
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (SQLException e) {

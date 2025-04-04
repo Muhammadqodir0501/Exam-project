@@ -31,7 +31,7 @@ public class CabinetServlet extends HttpServlet {
             List<Publication> publications = PublicationService.findAll();
             for (Publication publication : publications) {
                 List<Comment> comments = CommentService.findByPublicationId(publication.getId());
-                publication.setComments(comments); // Assuming Publication has a setComments method
+                publication.setComments(comments);
             }
             System.out.println("Fetched " + publications.size() + " publications:");
             publications.forEach(publication -> System.out.println(publication));

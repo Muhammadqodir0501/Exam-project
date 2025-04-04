@@ -12,10 +12,8 @@
 <body>
 <%
     User currentUser = (User) session.getAttribute("currentUser");
-    if (currentUser == null) {
-        response.sendRedirect("/auth/login.jsp");
-        return;
-    }
+    System.out.println("<!-- Debug: Current user in session = " + (currentUser != null ? currentUser.getEmail() : "null") + " -->");
+    System.out.println("<!-- Debug: User photoId = " + (currentUser != null ? currentUser.getPhotoId() : "null") + " -->");
 %>
 
 <div class="row bg-dark text-white p-2">
@@ -36,6 +34,7 @@
     <div class="row">
         <%
             List<Publication> publications = (List<Publication>) request.getAttribute("publications");
+            System.out.println("<!-- Debug: Number of publications = " + (publications != null ? publications.size() : "null") + " -->");
             if (publications != null && !publications.isEmpty()) {
                 for (Publication publication : publications) {
         %>
