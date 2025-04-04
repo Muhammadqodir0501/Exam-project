@@ -1,9 +1,6 @@
 package uz.pdp.demo9.config.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
@@ -11,6 +8,7 @@ import java.sql.ResultSet;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
+@ToString
 public class User {
     private Integer id;
     private String email;
@@ -28,6 +26,7 @@ public class User {
 
     @SneakyThrows
     public User(ResultSet resultSet){
+        this.id = resultSet.getInt("id");
         this.email = resultSet.getString("email");
         this.password = resultSet.getString("password");
         this.firstName = resultSet.getString("first_name");

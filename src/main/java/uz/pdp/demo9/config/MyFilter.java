@@ -18,7 +18,9 @@ public class MyFilter implements Filter {
             "/auth/login.jsp",
             "/auth/register.jsp",
             "/login",
-            "/register"));
+            "/register",
+            "/publication.jsp"));
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;

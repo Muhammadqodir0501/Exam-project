@@ -15,7 +15,7 @@ public class AttachmentService {
         try (
                 Connection connection = DbConfig.getDataSource().getConnection();
         ) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO attachment (content) VALUES (?) returning id");
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO attachments (content) VALUES (?) returning id");
             preparedStatement.setBytes(1, attachment.getContent());
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getResultSet();
@@ -32,7 +32,7 @@ public class AttachmentService {
         try (
                 Connection connection = DbConfig.getDataSource().getConnection();
                 ){
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from attachment where id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from attachments where id = ?");
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
             ResultSet resultSet = preparedStatement.getResultSet();
