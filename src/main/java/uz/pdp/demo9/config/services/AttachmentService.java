@@ -31,7 +31,7 @@ public class AttachmentService {
     public static Attachment findById(Integer id) {
         try (
                 Connection connection = DbConfig.getDataSource().getConnection();
-                ){
+        ){
             PreparedStatement preparedStatement = connection.prepareStatement("select * from attachments where id = ?");
             preparedStatement.setInt(1, id);
             preparedStatement.execute();

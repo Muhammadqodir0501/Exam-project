@@ -18,10 +18,12 @@ public class MyFilter implements Filter {
 
     Set<String> openPages = new HashSet<>(Set.of(
             "/auth/login.jsp",
+            "/auth/user_login.jsp", // Added for User login
             "/auth/register.jsp",
             "/login",
             "/register",
-            "/publication.jsp"));
+            "/publication.jsp"
+    ));
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

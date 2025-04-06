@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,7 +17,7 @@ public class Publication {
     private String title;
     private String description;
     private Integer publicationPhotoId;
-    private Date createdDate;
+    private String adminName; // New field for the admin's name
     private List<Comment> comments;
 
     public Publication(ResultSet rs) throws SQLException {

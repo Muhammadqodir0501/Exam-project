@@ -18,6 +18,12 @@
                 <% } %>
                 <form action="/register" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
+                        <label>
+                            <img class="rounded-circle" width="80" src="https://via.placeholder.com/80" alt="Profile Photo" id="previewImage">
+                            <input name="photo" type="file" class="d-none" id="photoInput" accept="image/*" required>
+                        </label>
+                    </div>
+                    <div class="mb-3">
                         <label for="firstName" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="firstName" name="firstName" required>
                     </div>
@@ -33,16 +39,10 @@
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <div class="mb-3">
-                        <label>
-                            <img class="rounded-circle" width="80" src="https://via.placeholder.com/80" alt="Profile Photo" id="previewImage">
-                            <input name="photo" type="file" class="d-none" id="photoInput" accept="image/*" required>
-                        </label>
-                    </div>
                     <button type="submit" class="btn btn-primary w-100">Register</button>
                 </form>
                 <p class="text-center mt-3">
-                    Already have an account? <a href="/auth/login.jsp">Login here</a>
+                    Already have an account? <a href="/auth/user_login.jsp">Login here</a>
                 </p>
             </div>
         </div>

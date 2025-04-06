@@ -4,7 +4,6 @@ CREATE TABLE attachments (
                              content BYTEA NOT NULL
 );
 
--- Users table
 CREATE TABLE users (
                        id SERIAL PRIMARY KEY,
                        email VARCHAR(255) UNIQUE NOT NULL,
@@ -17,7 +16,6 @@ CREATE TABLE users (
                        CONSTRAINT fk_user_photo FOREIGN KEY (photo_id) REFERENCES attachments(id) ON DELETE SET NULL
 );
 
--- Publications table
 CREATE TABLE publications (
                               id SERIAL PRIMARY KEY,
                               user_id INTEGER NOT NULL,

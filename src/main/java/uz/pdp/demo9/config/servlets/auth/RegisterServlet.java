@@ -45,7 +45,8 @@ public class RegisterServlet extends HttpServlet {
             user.setPhotoId(savedAttachment.getId());
 
             UserService.save(user);
-            resp.sendRedirect("/auth/login.jsp");
+            System.out.println("RegisterServlet: User registered, redirecting to user login page");
+            resp.sendRedirect("/auth/user_login.jsp");
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());
             e.printStackTrace();

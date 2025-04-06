@@ -72,13 +72,18 @@ public class PublicationService {
         List<Publication> publications = new ArrayList<>();
         try (Connection connection = DbConfig.getDataSource().getConnection()) {
             connection.setAutoCommit(true);
-            String sql = "SELECT * FROM publications ORDER BY id DESC";
+            String sql = "SELECT p.*, u.first_name, u.last_name " +
+                    "FROM publications p " +
+                    "JOIN users u ON p.user_id = u.id " +
+                    "ORDER BY p.id DESC";
             PreparedStatement ps = connection.prepareStatement(sql);
             System.out.println("Executing SQL: " + sql);
             ps.execute();
             ResultSet rs = ps.getResultSet();
             while (rs.next()) {
                 Publication publication = new Publication(rs);
+                String adminName = rs.getString("first_name") + " " + rs.getString("last_name");
+                publication.setAdminName(adminName);
                 publications.add(publication);
             }
             System.out.println("Found " + publications.size() + " publications");

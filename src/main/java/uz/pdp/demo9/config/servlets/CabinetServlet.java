@@ -22,9 +22,10 @@ public class CabinetServlet extends HttpServlet {
         try {
             System.out.println("CabinetServlet: doGet called for /cabinet");
             User currentUser = (User) req.getSession().getAttribute("currentUser");
+            System.out.println("CabinetServlet: Current user in session: " + (currentUser != null ? currentUser.getEmail() : "null"));
             if (currentUser == null) {
-                System.out.println("User not logged in, redirecting to login");
-                resp.sendRedirect("/auth/login.jsp");
+                System.out.println("CabinetServlet: User not logged in, redirecting to user login");
+                resp.sendRedirect("/auth/user_login.jsp");
                 return;
             }
 
@@ -33,10 +34,10 @@ public class CabinetServlet extends HttpServlet {
                 List<Comment> comments = CommentService.findByPublicationId(publication.getId());
                 publication.setComments(comments);
             }
-            System.out.println("Fetched " + publications.size() + " publications:");
+            System.out.println("CabinetServlet: Fetched " + publications.size() + " publications:");
             publications.forEach(publication -> System.out.println(publication));
             req.setAttribute("publications", publications);
-            System.out.println("Forwarding to cabinet.jsp with publications");
+            System.out.println("CabinetServlet: Forwarding to cabinet.jsp with publications");
             req.getRequestDispatcher("/cabinet.jsp").forward(req, resp);
         } catch (SQLException e) {
             System.err.println("SQL Error: " + e.getMessage());

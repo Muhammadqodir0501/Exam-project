@@ -1,14 +1,21 @@
-<%@ page import="uz.pdp.demo9.config.entity.Publication" %>
-<%@ page import="java.util.List" %>
-<!DOCTYPE html>
-<html lang="en">
+<%@ page import="uz.pdp.demo9.config.entity.User" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Publication</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<%
+    User currentUser = (User) session.getAttribute("currentUser");
+    String loginType = (String) session.getAttribute("loginType");
+    boolean isAdmin = "admin".equalsIgnoreCase(loginType);
+    if (currentUser == null || !isAdmin) {
+        response.sendRedirect("/cabinet");
+        return;
+    }
+%>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -38,41 +45,13 @@
             </div>
         </div>
     </div>
-
-    <div class="row mt-5">
-        <h3 class="text-center">Publications</h3>
-        <%
-            List<Publication> publications = (List<Publication>) request.getAttribute("publications");
-            if (publications != null && !publications.isEmpty()) {
-                for (Publication publication : publications) {
-        %>
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <img src="/publication/<%= publication.getPublicationPhotoId() %>" class="card-img-top" alt="Publication Photo">
-                <div class="card-body">
-                    <h5 class="card-title"><%= publication.getTitle() %></h5>
-                    <p class="card-text"><%= publication.getDescription() %></p>
-                </div>
-            </div>
-        </div>
-        <%
-            }
-        } else {
-        %>
-        <p class="text-center">No publications found.</p>
-        <%
-            }
-        %>
-    </div>
 </div>
 
 <script>
-    // Ensure the click on the image triggers the file input
     document.getElementById('previewImage').addEventListener('click', function() {
         document.getElementById('photoInput').click();
     });
 
-    // Update the preview image when a file is selected
     document.getElementById('photoInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
